@@ -85,7 +85,7 @@ Here is an example configuration:
 
 ```env
 DB_CONNECTION=mysql
-DB_HOST=weather_mysql
+DB_HOST=mysql
 DB_PORT=3306
 DB_DATABASE=your_database_name
 DB_USERNAME=your_database_username
@@ -113,7 +113,7 @@ VITE_API_URL=/api/
 
 ```
 
-The DB_HOST needs to be weather_mysql container name.
+The DB_HOST needs to be mysql container name and the PUSHER_HOST needs to be soketi like in docker-compose.yml service name.
 
 ### 4. Build The Containers
 
