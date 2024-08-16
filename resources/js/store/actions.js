@@ -16,41 +16,46 @@ export default {
         if (cityId) {
             dispatch("initializeWeatherData", cityId);
             dispatch("initializeChannel", cityId);
+        } else if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                try {
+                    const cityResponse =
+                        await WeatherService.getCityFromLocation(lat, lon);
+                    const { city } = cityResponse;
+                    localStorage.setItem("city", city);
+
+                    commit("SET_LOCATION", {
+                        city,
+                        latitude: lat,
+                        longitude: lon,
+                    });
+
+                    const locationResponse = await WeatherService.storeLocation(
+                        city,
+                        lat,
+                        lon,
+                        state.userId,
+                    );
+                    const { cityId } = locationResponse;
+
+                    localStorage.setItem("cityId", cityId);
+
+                    commit("SET_CITY_ID", cityId);
+
+                    dispatch("initializeChannel", cityId);
+                    dispatch("initializeWeatherData", cityId);
+                } catch (error) {
+                    console.error(
+                        "Hiba történt a hely meghatározása során:",
+                        error,
+                    );
+                }
+            });
         } else {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    localStorage.setItem("latitude", lat);
-                    localStorage.setItem("longitude", lon);
-
-                    try {
-                        const cityResponse = await WeatherService.getCityFromLocation(lat, lon);
-                        const { city } = cityResponse;
-                        localStorage.setItem("city", city);
-
-                        commit("SET_LOCATION", {
-                            city,
-                            latitude: lat,
-                            longitude: lon,
-                        });
-
-                        const locationResponse = await WeatherService.storeLocation(city, lat, lon, state.userId);
-                        const { cityId } = locationResponse;
-
-                        localStorage.setItem("cityId", cityId);
-
-                        commit("SET_CITY_ID", cityId);
-
-                        dispatch("initializeChannel", cityId);
-                        dispatch("initializeWeatherData", cityId);
-                    } catch (error) {
-                        console.error("Hiba történt a hely meghatározása során:", error);
-                    }
-                });
-            } else {
-                console.error("Geolocation is not supported by this browser.");
-            }
+            console.error("Geolocation is not supported by this browser.");
         }
     },
 
@@ -59,7 +64,10 @@ export default {
             const weatherData = await WeatherService.getWeatherData(cityId);
             commit("SET_WEATHER_DATA", weatherData);
         } catch (error) {
-            console.error("Hiba történt az időjárási adatok lekérdezésekor:", error);
+            console.error(
+                "Hiba történt az időjárási adatok lekérdezésekor:",
+                error,
+            );
         }
     },
 

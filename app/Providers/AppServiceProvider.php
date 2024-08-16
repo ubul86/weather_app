@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Repositories\AuthRepository;
+use App\Repositories\CityRepository;
+use App\Repositories\Interfaces\CityInterface;
 use App\Repositories\Interfaces\UserAuthenticationInterface;
 use App\Repositories\Interfaces\UserRegistrationInterface;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(WeatherService::class, function ($app) {
             return new WeatherService($app->make(WeatherInterface::class));
         });
+        $this->app->bind(CityInterface::class, CityRepository::class);
     }
 
     /**

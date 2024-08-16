@@ -16,6 +16,9 @@ export default {
         state.city = city;
         state.latitude = latitude;
         state.longitude = longitude;
+
+        localStorage.setItem("latitude", latitude);
+        localStorage.setItem("longitude", longitude);
     },
     SET_CITY_ID(state, cityId) {
         state.cityId = cityId;
