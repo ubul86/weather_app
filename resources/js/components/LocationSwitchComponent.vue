@@ -1,25 +1,46 @@
 <template>
-    <v-select
-        :items="cities"
-        v-model="selectedCity"
-        label="Select a City"
-        @change="onCityChange"
-        item-value="id"
-        item-text="name"
-    ></v-select>
+    <div>
+        <v-select
+            :items="cities"
+            v-model="selectedCity"
+            label="Select a City"
+            @change="onCityChange"
+            item-value="id"
+            item-text="name"
+        ></v-select>
+        <MapComponent
+            v-if="selectedCity"
+            :latitude="selectedCity.latitude"
+            :longitude="selectedCity.longitude"
+            :city="selectedCity"
+        />
+    </div>
 </template>
 
 <script>
 import CityService from "../services/city.service.js";
+import MapComponent from "@/components/MapComponent.vue";
 
 export default {
+    components: {
+        MapComponent,
+    },
+    computed: {
+        selectedCity() {
+            return this.cities.find((city) => city.id === this.selectedCityId);
+        },
+        selectedCityId() {
+            return localStorage.getItem("cityId");
+        },
+    },
     data() {
         return {
             cities: [],
-            selectedCity: localStorage.getItem("cityId") || null,
+            selectedCity: null,
+            selectedCityId: null,
         };
     },
-    created() {
+    mounted() {
         this.fetchCities();
     },
     methods: {
@@ -40,6 +61,8 @@ export default {
                 this.$store.dispatch("initializeWeatherData", cityId);
 
                 const cityItem = this.cities.find((item) => item.id === cityId);
+
+                this.selectedCity = cityItem;
 
                 this.$store.commit("SET_CHANNEL", {
                     city: cityItem.name,

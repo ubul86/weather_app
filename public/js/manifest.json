@@ -1,4 +1,16 @@
 {
+  "layers-2x.png": {
+    "file": "layers-2x.png",
+    "src": "layers-2x.png"
+  },
+  "layers.png": {
+    "file": "layers.png",
+    "src": "layers.png"
+  },
+  "marker-icon.png": {
+    "file": "marker-icon.png",
+    "src": "marker-icon.png"
+  },
   "materialdesignicons-webfont.eot": {
     "file": "materialdesignicons-webfont.eot",
     "src": "materialdesignicons-webfont.eot"
@@ -31,6 +43,18 @@
     "file": "materialdesignicons-webfont.woff2",
     "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2"
   },
+  "node_modules/leaflet/dist/images/layers-2x.png": {
+    "file": "layers-2x.png",
+    "src": "node_modules/leaflet/dist/images/layers-2x.png"
+  },
+  "node_modules/leaflet/dist/images/layers.png": {
+    "file": "layers.png",
+    "src": "node_modules/leaflet/dist/images/layers.png"
+  },
+  "node_modules/leaflet/dist/images/marker-icon.png": {
+    "file": "marker-icon.png",
+    "src": "node_modules/leaflet/dist/images/marker-icon.png"
+  },
   "resources/js/app.js": {
     "file": "app.js",
     "name": "app",
@@ -40,6 +64,9 @@
       "app.css"
     ],
     "assets": [
+      "layers.png",
+      "layers-2x.png",
+      "marker-icon.png",
       "materialdesignicons-webfont.eot",
       "materialdesignicons-webfont.woff2",
       "materialdesignicons-webfont.woff",
