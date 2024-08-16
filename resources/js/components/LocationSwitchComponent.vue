@@ -7,6 +7,7 @@
             @change="onCityChange"
             item-value="id"
             item-text="name"
+            class="select-location"
         ></v-select>
         <MapComponent
             v-if="selectedCity"
@@ -74,3 +75,9 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.select-location {
+    z-index: 1000;
+}
+</style>
