@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { Line as LineChartGenerator } from 'vue-chartjs/legacy'
+import { Line as LineChartGenerator } from "vue-chartjs/legacy";
 import {
     Chart as ChartJS,
     Title,
@@ -22,8 +22,8 @@ import {
     LineElement,
     LinearScale,
     CategoryScale,
-    PointElement
-} from 'chart.js'
+    PointElement,
+} from "chart.js";
 
 ChartJS.register(
     Title,
@@ -32,78 +32,88 @@ ChartJS.register(
     LineElement,
     LinearScale,
     CategoryScale,
-    PointElement
-)
+    PointElement,
+);
 
 export default {
-    name: 'LineChart',
+    name: "LineChart",
     components: {
-        LineChartGenerator
+        LineChartGenerator,
     },
     props: {
         chartId: {
             type: String,
-            default: 'line-chart'
+            default: "line-chart",
         },
         datasetIdKey: {
             type: String,
-            default: 'label'
+            default: "label",
         },
         width: {
             type: Number,
-            default: 400
+            default: 400,
         },
         height: {
             type: Number,
-            default: 400
+            default: 400,
         },
         cssClasses: {
-            default: '',
-            type: String
+            default: "",
+            type: String,
         },
         styles: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         plugins: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         weatherData: {
             type: Object,
-            default: () => ({})
-        }
+            default: () => ({}),
+        },
     },
     computed: {
         chartData() {
-            if (!this.weatherData.hourly || !this.weatherData.hourly.time || !this.weatherData.hourly.temperature_2m || !this.weatherData.hourly.relative_humidity_2m) {
+            if (
+                !this.weatherData.hourly ||
+                !this.weatherData.hourly.time ||
+                !this.weatherData.hourly.temperature_2m ||
+                !this.weatherData.hourly.relative_humidity_2m
+            ) {
                 return {
                     labels: [],
-                    datasets: []
-                }
+                    datasets: [],
+                };
             }
 
             return {
-                labels: this.weatherData.hourly.time.map(t => new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })),
+                labels: this.weatherData.hourly.time.map((t) =>
+                    new Date(t).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    }),
+                ),
                 datasets: [
                     {
-                        label: 'Hourly Temperature',
+                        label: "Hourly Temperature",
                         data: this.weatherData.hourly.temperature_2m,
-                        borderColor: '#36A2EB',
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: "#36A2EB",
+                        backgroundColor: "rgba(54, 162, 235, 0.2)",
                         borderWidth: 1,
-                        fill: true
+                        fill: true,
                     },
                     {
-                        label: 'Hourly Relative Humidity',
+                        label: "Hourly Relative Humidity",
                         data: this.weatherData.hourly.relative_humidity_2m,
-                        borderColor: '#FF6384',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: "#FF6384",
+                        backgroundColor: "rgba(255, 99, 132, 0.2)",
                         borderWidth: 1,
-                        fill: true
-                    }
-                ]
-            }
+                        fill: true,
+                    },
+                ],
+            };
         },
         chartOptions() {
             return {
@@ -111,39 +121,39 @@ export default {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'top'
+                        position: "top",
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
+                            label(context) {
+                                let label = context.dataset.label || "";
                                 if (label) {
-                                    label += ': ';
+                                    label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
                                     label += context.parsed.y;
                                 }
                                 return label;
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
                 scales: {
                     x: {
                         title: {
                             display: true,
-                            text: 'Time'
+                            text: "Time",
                         },
                     },
                     y: {
                         title: {
                             display: true,
-                            text: 'Value'
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+                            text: "Value",
+                        },
+                    },
+                },
+            };
+        },
+    },
+};
 </script>
