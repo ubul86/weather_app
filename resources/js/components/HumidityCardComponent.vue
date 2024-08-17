@@ -40,6 +40,5 @@ export default {
 .humidity-label {
     font-size: 2em;
     font-weight: bold;
-    color: #000;
 }
 </style>

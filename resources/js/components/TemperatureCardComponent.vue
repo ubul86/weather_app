@@ -22,26 +22,26 @@
 
 <script>
 export default {
-    name: 'TemperatureCard',
+    name: "TemperatureCard",
     props: {
         weatherData: {
             type: Object,
-            required: true
+            required: true,
         },
     },
     computed: {
         city() {
-            return localStorage.getItem('city');
+            return this.$store.state.city;
         },
         temperature() {
-            return this.weatherData.current.temperature_2m
+            return this.weatherData.current.temperature_2m;
         },
         formattedTime() {
             const date = new Date(this.weatherData.current.time);
             return date.toLocaleString();
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style scoped>
@@ -62,5 +62,4 @@ export default {
 .weather-main {
     font-size: 1.2em;
 }
-
 </style>

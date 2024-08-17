@@ -26,19 +26,11 @@ export default {
     components: {
         MapComponent,
     },
-    computed: {
-        selectedCity() {
-            return this.cities.find((city) => city.id === this.selectedCityId);
-        },
-        selectedCityId() {
-            return localStorage.getItem("cityId");
-        },
-    },
     data() {
         return {
             cities: [],
             selectedCity: null,
-            selectedCityId: null,
+            selectedCityId: localStorage.getItem("cityId") || null,
         };
     },
     mounted() {
@@ -49,6 +41,12 @@ export default {
             CityService.getCities()
                 .then((response) => {
                     this.cities = response;
+                    const cityItem = this.cities.find(
+                        (city) => city.id == this.selectedCityId,
+                    );
+                    if (cityItem) {
+                        this.selectedCity = cityItem;
+                    }
                 })
                 .catch((error) => {
                     console.error("Failed to fetch cities:", error);
@@ -65,7 +63,7 @@ export default {
 
                 this.selectedCity = cityItem;
 
-                this.$store.commit("SET_CHANNEL", {
+                this.$store.commit("SET_LOCATION", {
                     city: cityItem.name,
                     latitude: cityItem.latitude,
                     longitude: cityItem.longitude,
