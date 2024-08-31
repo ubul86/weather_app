@@ -115,6 +115,16 @@ services:
         networks:
             - app-network
 
+    mailhog:
+        image: mailhog/mailhog
+        restart: unless-stopped
+        container_name: weather_mailhog
+        ports:
+            - "1025:1025"
+            - "8025:8025"
+        networks:
+            - app-network
+
 networks:
     app-network:
         driver: bridge
