@@ -103,6 +103,15 @@ export default {
             throw error;
         }
     },
+    async registration({ commit }, user) {
+        try {
+            const response = await AuthService.registration(user);
+            return response;
+        } catch (error) {
+            console.error("Login failed:", error);
+            throw error;
+        }
+    },
 
     async logout({ commit }) {
         try {

@@ -37,6 +37,7 @@
                 </v-row>
             </v-container>
         </v-main>
+        <router-view></router-view>
     </v-app>
 </template>
 

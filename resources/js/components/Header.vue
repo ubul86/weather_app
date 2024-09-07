@@ -4,6 +4,7 @@
         <v-toolbar-title>My App</v-toolbar-title>
         <v-spacer></v-spacer>
         <div v-if="!isAuthenticated">
+            <v-btn @click="openRegistrationPopup">Registration</v-btn>
             <v-btn @click="openLoginPopup">Login</v-btn>
         </div>
         <div v-else>
@@ -16,15 +17,20 @@
             v-model="showLoginPopup"
             @login-success="handleLoginSuccess"
         />
+        <RegistrationPopup
+            v-model="showRegistrationPopup"
+            @login-success="handleLoginSuccess"
+        />
     </v-app-bar>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
 import LoginPopup from "./LoginPopup.vue";
+import RegistrationPopup from "@/components/RegistrationPopup.vue";
 
 export default {
-    components: { LoginPopup },
+    components: { LoginPopup, RegistrationPopup },
     computed: {
         ...mapState(["isAuthenticated"]),
         iconColorClass() {
@@ -40,6 +46,7 @@ export default {
         return {
             isDarkMode: localStorage.getItem("theme") === "dark",
             showLoginPopup: false,
+            showRegistrationPopup: false,
         };
     },
     mounted() {
@@ -49,6 +56,9 @@ export default {
         ...mapActions(["logout"]),
         openLoginPopup() {
             this.showLoginPopup = true;
+        },
+        openRegistrationPopup() {
+            this.showRegistrationPopup = true;
         },
         toggleTheme() {
             this.isDarkMode = !this.isDarkMode;

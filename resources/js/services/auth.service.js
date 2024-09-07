@@ -22,9 +22,9 @@ class AuthService {
         });
     }
 
-    register(user) {
-        return publicApi.post("/register", {
-            username: user.username,
+    registration(user) {
+        return publicApi.post("/registration", {
+            name: user.name,
             email: user.email,
             password: user.password,
         });
@@ -33,6 +33,12 @@ class AuthService {
     getToken() {
         const user = JSON.parse(localStorage.getItem("user"));
         return user ? user.token : null;
+    }
+
+    activation(token) {
+        return publicApi.post("/activation", {
+            token: token
+        });
     }
 }
 
