@@ -2,47 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\WeatherUpdated;
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
-use App\Models\City;
 use App\Repositories\Interfaces\UserAuthenticationInterface;
-use App\Repositories\Interfaces\UserRegistrationInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Repositories\Interfaces\UserRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
     protected UserRepositoryInterface $userRepository;
 
-    protected UserRegistrationInterface $userRegistration;
-
     protected UserAuthenticationInterface $authRepository;
 
-    public function __construct(UserRegistrationInterface $userRegistration, UserRepositoryInterface $userRepository, UserAuthenticationInterface $authRepository)
+    public function __construct(UserRepositoryInterface $userRepository, UserAuthenticationInterface $authRepository)
     {
-        $this->userRegistration = $userRegistration;
         $this->userRepository = $userRepository;
         $this->authRepository = $authRepository;
     }
 
-    public function register(RegisterRequest $request): JsonResponse
-    {
-        $validated = $request->validated();
-
-        $user = $this->userRegistration->register($request->only('name', 'email', 'password'));
-        $token = $this->authRepository->login($request->only('email', 'password'));
-
-        return response()->json(compact('user', 'token'), 201);
-    }
-
     public function login(LoginRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-
         $credentials = $request->only('email', 'password');
         $token = $this->authRepository->login($credentials);
 
