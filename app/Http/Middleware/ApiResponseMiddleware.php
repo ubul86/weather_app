@@ -20,7 +20,7 @@ class ApiResponseMiddleware
                 return response()->json([
                     'success' => true,
                     'message' => $data->message ?? 'Request successful',
-                    'data' => $data->data ?? null,
+                    'data' => $data ?? null,
                 ], $response->status());
             }
 

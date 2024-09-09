@@ -8,17 +8,17 @@ class AuthService {
                 password: user.password,
             })
             .then((response) => {
-                if (response.data.token) {
-                    localStorage.setItem("user", JSON.stringify(response.data));
+                if (response.data.data.token) {
+                    localStorage.setItem("user", JSON.stringify(response.data.data.token));
                 }
-                return response.data;
+                return response.data.data;
             });
     }
 
     logout() {
         return privateApi.post("/logout").then((response) => {
             localStorage.removeItem("user");
-            return response.data;
+            return response.data.data;
         });
     }
 

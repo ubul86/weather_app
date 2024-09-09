@@ -32,7 +32,7 @@ class AuthController extends Controller
             $token = $this->authRepository->login($credentials);
 
             return response()->json([
-                'token' => $token
+                'token' => $token,
             ]);
         } catch (NotFoundHttpException $e) {
             throw $e;
