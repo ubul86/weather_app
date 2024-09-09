@@ -71,14 +71,7 @@ export default {
                 console.error("Login error:", error);
             }
         },
-        async logout() {
-            try {
-                await this.$store.dispatch("logout");
-                this.close();
-            } catch (error) {
-                console.error("Logout error:", error);
-            }
-        },
+
         close() {
             this.dialog = false;
         },
