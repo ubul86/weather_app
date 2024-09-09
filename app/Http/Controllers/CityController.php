@@ -19,6 +19,8 @@ class CityController extends Controller
     {
         $cities = $this->cityRepository->getCities();
 
-        return response()->json($cities);
+        return response()->json([
+            'data' => $cities
+        ]);
     }
 }

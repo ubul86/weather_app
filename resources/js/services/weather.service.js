@@ -7,9 +7,8 @@ class WeatherService {
                 latitude,
                 longitude,
             });
-            return response.data;
+            return response.data.data;
         } catch (error) {
-            console.error("Hiba történt a város lekérése során:", error);
             throw error;
         }
     }
@@ -29,7 +28,7 @@ class WeatherService {
                     },
                 },
             );
-            return response.data;
+            return response.data.data;
         } catch (error) {
             console.error("Hiba történt a hely tárolása során:", error);
             throw error;
@@ -39,7 +38,7 @@ class WeatherService {
     async getWeatherData(cityId) {
         try {
             const response = await publicApi.get(`/weather/${cityId}`);
-            return response.data;
+            return response.data.data;
         } catch (error) {
             console.error(
                 "Hiba történt az időjárás adatok lekérése során:",
