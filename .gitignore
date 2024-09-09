@@ -68,3 +68,6 @@ yarn-error.log
 /.idea
 /.vscode
 /cache
+
+/docker_settings/mailhog_data/*
+!/docker_settings/mailhog_data/.keep
