@@ -11,7 +11,7 @@ pipelines:
             - node
           script:
             - echo "Copying .env.sample to .env"
-            - cp .env.sample .env
+            - cp .env.example .env
             - echo "Replacing environment variables in .env"
             - sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=${BITBUCKET_ENV_DB_CONNECTION}/" .env
             - sed -i "s/DB_HOST=.*/DB_HOST=${BITBUCKET_ENV_DB_HOST}/" .env
