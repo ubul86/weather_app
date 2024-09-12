@@ -25,6 +25,8 @@ pipelines:
             - sed -i "s/PUSHER_PORT=.*/PUSHER_PORT=${BITBUCKET_ENV_PUSHER_PORT}/" .env
             - sed -i "s/NGINX_PORT=.*/NGINX_PORT=${BITBUCKET_ENV_NGINX_PORT}/" .env
             - sed -i "s/PHPMYADMIN_PORT=.*/PHPMYADMIN_PORT=${BITBUCKET_ENV_PHPADMIN_PORT}/" .env
+            - echo "Listing .env content:"
+            - cat .env
             - docker-compose up -d --build
             - docker-compose exec -T php composer install
             - docker-compose exec -T php php artisan jwt:secret
