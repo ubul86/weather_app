@@ -28,10 +28,10 @@ pipelines:
             - echo "Listing .env content:"
             - cat .env
             - docker-compose up -d --build
+            - docker-compose exec -T php composer install
             - docker-compose exec -T php php artisan config:clear
             - docker-compose exec -T php php artisan cache:clear
             - docker-compose exec -T php php artisan config:cache
-            - docker-compose exec -T php composer install
             - docker-compose exec -T php php artisan jwt:secret
             - docker-compose exec -T php sh -c 'while ! nc -z mysql82 3306; do sleep 1; done'
             - docker-compose exec php ping mysql82
