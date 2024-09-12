@@ -30,6 +30,9 @@ pipelines:
             - docker-compose up -d --build
             - docker-compose exec -T php composer install
             - docker-compose exec -T php php artisan jwt:secret
+            - docker-compose exec -T php sh -c 'while ! mysqladmin ping -h"mysql82" --silent; do sleep 1; done'
+            - docker-compose exec php ping mysql82
+            - docker-compose logs mysql82
             - docker-compose exec -T php php artisan migrate
             - docker-compose exec -T php php artisan db:seed
             - docker-compose exec -T node npm install
