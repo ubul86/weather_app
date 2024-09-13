@@ -19,8 +19,6 @@ class WeatherController extends Controller
     {
         $city = City::findOrFail($cityId);
         $weatherData = $this->weatherService->fetchWeatherData($city);
-        return response()->json([
-            'data' => $weatherData
-        ]);
+        return response()->json($weatherData);
     }
 }
