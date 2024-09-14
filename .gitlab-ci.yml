@@ -41,6 +41,8 @@ docker-build:
 
 codestyle:
   stage: test
+  services:
+    - docker:dind
   dependencies:
     - docker-build
   script:
@@ -51,6 +53,8 @@ codestyle:
 
 analyse:
   stage: test
+  services:
+    - docker:dind
   dependencies:
     - docker-build
   script:
@@ -61,6 +65,8 @@ analyse:
 
 phpunit:
   stage: test
+  services:
+    - docker:dind
   dependencies:
     - docker-build
   script:
