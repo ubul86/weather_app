@@ -1,9 +1,7 @@
 image: docker:latest
 
-stages:
-  - build
-  - test
-  - deploy
+services:
+  - docker:dind
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -16,8 +14,6 @@ before_script:
 
 docker-build:
   stage: build
-  services:
-    - docker:dind
   script:
     - docker-compose up -d --build
     - docker-compose exec -T php composer install
@@ -37,51 +33,39 @@ docker-build:
       - public/js/
       - .env
   rules:
-    - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
+    - if: $CI_COMMIT_TAG =~ /^stage-.*$/
 
 codestyle:
   stage: test
-  services:
-    - docker:dind
-  dependencies:
-    - docker-build
   script:
     - docker-compose exec -T php composer lint
+  dependencies:
+    - docker-build
   rules:
-    - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
+    - if: $CI_COMMIT_TAG =~ /^stage-.*$/
 
 analyse:
   stage: test
-  services:
-    - docker:dind
-  dependencies:
-    - docker-build
   script:
     - docker-compose exec -T php composer analyse
+  dependencies:
+    - docker-build
   rules:
-    - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
+    - if: $CI_COMMIT_TAG =~ /^stage-.*$/
 
 phpunit:
   stage: test
-  services:
-    - docker:dind
-  dependencies:
-    - docker-build
   script:
     - docker-compose exec -T php php artisan test
+  dependencies:
+    - docker-build
   rules:
-    - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
+    - if: $CI_COMMIT_TAG =~ /^stage-.*$/
 
 deploy:
   stage: deploy
-  services:
-    - docker:dind
   script:
     - echo "Deploying to FTP server"
     - curl -T "path/to/local/file" "ftp://$FTP_SERVER/path/to/remote/file" --user "$FTP_USERNAME:$FTP_PASSWORD"
   rules:
-    - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
-  #only:
-  #  - tags
-
-
+    - if: $CI_COMMIT_TAG =~ /^stage-.*$/

@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
     soketi:
         image: 'quay.io/soketi/soketi:latest-16-alpine'
@@ -13,6 +15,7 @@ services:
             - ${PUSHER_METRICS_PORT:-9601}:9601
         networks:
             - app-network
+
     nginx:
         image: nginx:1.17.4
         container_name: weather_nginx
@@ -86,7 +89,7 @@ services:
     mysql82:
         build:
             context: ./docker_settings
-            dockerfile: ./Dockerfile_mysql82
+            dockerfile: Dockerfile_mysql82
         container_name: weather_mysql82
         environment:
             MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
@@ -98,14 +101,12 @@ services:
             MYSQL_CHARSET: utf8mb4
             MYSQL_COLLATION: utf8mb4_unicode_ci
         ports:
-             - "33064:3306"
+            - "33064:3306"
         volumes:
             - ./docker_settings/mysql82_data:/var/lib/mysql
         user: ${CURRENT_UID:-}
         networks:
             - app-network
-
-
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
@@ -155,9 +156,3 @@ services:
 networks:
     app-network:
         driver: bridge
-    web:
-        external: true
-
-volumes:
-    mysql_data:
-        driver: local
