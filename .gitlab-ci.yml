@@ -1,37 +1,42 @@
-image: lorisleiva/laravel-docker:8.1
+image: docker:latest
 
-.init_ssh: &init_ssh |
-  eval $(ssh-agent -s)
-  echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-  mkdir -p ~/.ssh
-  chmod 700 ~/.ssh
-  [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+stages:
+  - build
+  - deploy
 
-  # Replace the last line with the following lines if you'd rather
-  # leave StrictHostKeyChecking enabled (replace yourdomain.com):
-  #
-  #  ssh-keyscan yourdomain.com >> ~/.ssh/known_hosts
-  #  chmod 644 ~/.ssh/known_hosts
-
-.change_file_permissions: &change_file_permissions |
-  find . -type f -not -path "./vendor/*" -exec chmod 664 {} \;
-  find . -type d -not -path "./vendor/*" -exec chmod 775 {} \;
+variables:
+  DOCKER_DRIVER: overlay2
+  COMPOSER_CACHE_DIR: /root/.composer/cache
+  NPM_CONFIG_CACHE: /root/.npm
 
 before_script:
   - echo "ENV_STAGE VARIABLE"
-  - ls -l $ENV_STAGE
-  - cat $ENV_STAGE
   - cp -f $ENV_STAGE ./.env
+
+docker-build:
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - docker-compose up -d --build
+  rules:
+    - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
 
 composer:
   stage: build
+  dependencies:
+    - docker-build
   cache:
     key: ${CI_COMMIT_REF_SLUG}-composer
     paths:
       - vendor/
   script:
-    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
-    - php artisan key:generate
+    - docker-compose exec -T php composer install
+    - docker-compose exec -T php php artisan key:generate
+    - docker-compose exec -T php php artisan config:clear
+    - docker-compose exec -T php php artisan cache:clear
+    - docker-compose exec -T php php artisan config:cache
+    - docker-compose exec -T php php artisan jwt:secret
   artifacts:
     expire_in: 1 month
     paths:
@@ -42,13 +47,15 @@ composer:
 
 npm:
   stage: build
+  dependencies:
+    - docker-build
   cache:
     key: ${CI_COMMIT_REF_SLUG}-npm
     paths:
       - node_modules/
   script:
-    - npm install
-    - npm run build
+    - docker-compose exec -T node npm install
+    - docker-compose exec -T node npm run build
   artifacts:
     expire_in: 1 month
     paths:
@@ -63,7 +70,7 @@ codestyle:
   dependencies:
     - composer
   script:
-    - composer lint
+    - docker-compose exec -T php composer lint
   rules:
     - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
 
@@ -72,7 +79,7 @@ analyse:
   dependencies:
     - composer
   script:
-    - composer analyse
+    - docker-compose exec -T php composer analyse
   rules:
     - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
 
@@ -81,31 +88,20 @@ phpunit:
   dependencies:
     - composer
   script:
-    - php artisan test
+    - docker-compose exec -T php php artisan test
   rules:
     - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
 
-staging:
+deploy:
   stage: deploy
+  services:
+    - docker:dind
   script:
-    - *init_ssh
-    - *change_file_permissions
-    - php artisan deploy dev.yourdomain.com -s upload
-  environment:
-    name: staging
-    url: http://dev.yourdomain.com
+    - echo "Deploying to FTP server"
+    - curl -T "path/to/local/file" "ftp://$FTP_SERVER/path/to/remote/file" --user "$FTP_USERNAME:$FTP_PASSWORD"
   rules:
     - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
+  #only:
+  #  - tags
 
-production:
-  stage: deploy
-  script:
-    - *init_ssh
-    - *change_file_permissions
-    - php artisan deploy yourdomain.com -s upload
-  environment:
-    name: production
-    url: http://yourdomain.com
-  when: manual
-  rules:
-    - if: $CI_COMMIT_TAG =~ '/^prod-.*$/'
+
