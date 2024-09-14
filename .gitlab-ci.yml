@@ -14,62 +14,35 @@ before_script:
   - echo "ENV_STAGE VARIABLE"
   - cp -f $ENV_STAGE ./.env
 
-dockerbuild:
+docker-build:
   stage: build
   services:
     - docker:dind
   script:
     - docker-compose up -d --build
-  rules:
-    - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
-
-composer:
-  stage: build
-  dependencies:
-    - dockerbuild
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-composer
-    paths:
-      - vendor/
-  script:
     - docker-compose exec -T php composer install
     - docker-compose exec -T php php artisan key:generate
     - docker-compose exec -T php php artisan config:clear
     - docker-compose exec -T php php artisan cache:clear
     - docker-compose exec -T php php artisan config:cache
     - docker-compose exec -T php php artisan jwt:secret
-  artifacts:
-    expire_in: 1 month
-    paths:
-      - vendor/
-      - .env
-  rules:
-    - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
-
-npm:
-  stage: build
-  dependencies:
-    - dockerbuild
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-npm
-    paths:
-      - node_modules/
-  script:
     - docker-compose exec -T node npm install
     - docker-compose exec -T node npm run build
   artifacts:
     expire_in: 1 month
     paths:
+      - vendor/
       - node_modules/
       - public/css/
       - public/js/
+      - .env
   rules:
     - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
 
 codestyle:
   stage: test
   dependencies:
-    - composer
+    - docker-build
   script:
     - docker-compose exec -T php composer lint
   rules:
@@ -78,7 +51,7 @@ codestyle:
 analyse:
   stage: test
   dependencies:
-    - composer
+    - docker-build
   script:
     - docker-compose exec -T php composer analyse
   rules:
@@ -87,7 +60,7 @@ analyse:
 phpunit:
   stage: test
   dependencies:
-    - composer
+    - docker-build
   script:
     - docker-compose exec -T php php artisan test
   rules:
