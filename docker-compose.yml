@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
     soketi:
         image: 'quay.io/soketi/soketi:latest-16-alpine'
