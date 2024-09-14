@@ -10,7 +10,7 @@ variables:
   NPM_CONFIG_CACHE: /root/.npm
 
 before_script:
-  - echo "ENV_STAGE is: $ENV_STAGE"
+  - echo "ENV_STAGE VARIABLE"
   - ls -l $ENV_STAGE
   - cat $ENV_STAGE
   - cp -f $ENV_STAGE ./.env
