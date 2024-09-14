@@ -43,11 +43,15 @@ build:
     - docker-compose exec -T php php artisan db:seed
     - docker-compose exec -T node npm install
     - docker-compose exec -T node npm run build
+  rules:
+    - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
 
 deploy:
   stage: deploy
   script:
     - echo "Deploying to FTP server"
     - curl -T "path/to/local/file" "ftp://$FTP_SERVER/path/to/remote/file" --user "$FTP_USERNAME:$FTP_PASSWORD"
-  only:
-    - tags
+  rules:
+    - if: $CI_COMMIT_TAG =~ '/^stage-.*$/'
+  #only:
+  #  - tags
