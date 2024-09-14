@@ -1,4 +1,4 @@
-image: atlassian/default-image:3
+image: docker:latest
 
 stages:
   - build
@@ -14,6 +14,8 @@ before_script:
   - cp $ENV_STAGE ./.env
 build:
   stage: build
+  services:
+    - docker:dind
   script:
     - docker-compose up -d --build
     - docker-compose exec -T php composer install
@@ -30,6 +32,8 @@ build:
 
 deploy:
   stage: deploy
+  services:
+    - docker:dind
   script:
     - echo "Deploying to FTP server"
     - curl -T "path/to/local/file" "ftp://$FTP_SERVER/path/to/remote/file" --user "$FTP_USERNAME:$FTP_PASSWORD"
