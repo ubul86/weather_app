@@ -10,8 +10,10 @@ variables:
   NPM_CONFIG_CACHE: /root/.npm
 
 before_script:
-  - echo "Create .env from Gitlab CI/CD Variables"
-  - cp $ENV_STAGE ./.env
+  - echo "ENV_STAGE is: $ENV_STAGE"
+  - ls -l $ENV_STAGE
+  - cat $ENV_STAGE
+  - cp -f $ENV_STAGE ./.env
 build:
   stage: build
   services:
