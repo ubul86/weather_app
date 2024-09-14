@@ -14,7 +14,7 @@ before_script:
   - echo "ENV_STAGE VARIABLE"
   - cp -f $ENV_STAGE ./.env
 
-docker-build:
+dockerbuild:
   stage: build
   services:
     - docker:dind
@@ -26,7 +26,7 @@ docker-build:
 composer:
   stage: build
   dependencies:
-    - docker-build
+    - dockerbuild
   cache:
     key: ${CI_COMMIT_REF_SLUG}-composer
     paths:
@@ -49,7 +49,7 @@ composer:
 npm:
   stage: build
   dependencies:
-    - docker-build
+    - dockerbuild
   cache:
     key: ${CI_COMMIT_REF_SLUG}-npm
     paths:
