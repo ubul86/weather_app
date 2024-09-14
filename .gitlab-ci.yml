@@ -10,24 +10,8 @@ variables:
   NPM_CONFIG_CACHE: /root/.npm
 
 before_script:
-  - echo "Copying .env.sample to .env"
-  - cp .env.example .env
-  - echo "Replacing environment variables in .env"
-  - sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=${BITBUCKET_ENV_DB_CONNECTION}/" .env
-  - sed -i "s/DB_HOST=.*/DB_HOST=${BITBUCKET_ENV_DB_HOST}/" .env
-  - sed -i "s/DB_PORT=.*/DB_PORT=${BITBUCKET_ENV_DB_PORT}/" .env
-  - sed -i "s/DB_DATABASE=.*/DB_DATABASE=${BITBUCKET_ENV_DB_DATABASE}/" .env
-  - sed -i "s/DB_USERNAME=.*/DB_USERNAME=${BITBUCKET_ENV_DB_USERNAME}/" .env
-  - sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${BITBUCKET_ENV_DB_PASSWORD}/" .env
-  - sed -i "s/PUSHER_APP_ID=.*/PUSHER_APP_ID=${BITBUCKET_ENV_PUSHER_APP_ID}/" .env
-  - sed -i "s/PUSHER_APP_KEY=.*/PUSHER_APP_KEY=${BITBUCKET_ENV_PUSHER_APP_KEY}/" .env
-  - sed -i "s/PUSHER_APP_SECRET=.*/PUSHER_APP_SECRET=${BITBUCKET_ENV_PUSHER_APP_SECRET}/" .env
-  - sed -i "s/PUSHER_PORT=.*/PUSHER_PORT=${BITBUCKET_ENV_PUSHER_PORT}/" .env
-  - sed -i "s/NGINX_PORT=.*/NGINX_PORT=${BITBUCKET_ENV_NGINX_PORT}/" .env
-  - sed -i "s/PHPMYADMIN_PORT=.*/PHPMYADMIN_PORT=${BITBUCKET_ENV_PHPADMIN_PORT}/" .env
-  - echo "Listing .env content:"
-  - cat .env
-
+  - echo "Create .env from Gitlab CI/CD Variables"
+  - cp $ENV_STAGE ./.env
 build:
   stage: build
   script:
@@ -37,8 +21,6 @@ build:
     - docker-compose exec -T php php artisan cache:clear
     - docker-compose exec -T php php artisan config:cache
     - docker-compose exec -T php php artisan jwt:secret
-    - docker-compose exec php ping mysql82
-    - docker-compose logs mysql82
     - docker-compose exec -T php php artisan migrate
     - docker-compose exec -T php php artisan db:seed
     - docker-compose exec -T node npm install
