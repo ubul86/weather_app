@@ -1,4 +1,4 @@
-import { publicApi, privateApi } from "./api";
+import { publicApi } from "./api";
 
 class CityService {
     getCities() {

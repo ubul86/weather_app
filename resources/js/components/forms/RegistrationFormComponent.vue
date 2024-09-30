@@ -1,20 +1,26 @@
 <template>
     <div>
         <v-form @submit.prevent="registration">
+            <v-alert v-if="generalError" type="error" dismissible>
+                {{ generalError }}
+            </v-alert>
             <v-text-field
                 v-model="user.name"
                 label="Name"
+                :error="!!errors.name"
                 required
             ></v-text-field>
             <v-text-field
                 v-model="user.email"
                 label="Email"
+                :error="!!errors.email"
                 required
             ></v-text-field>
             <v-text-field
                 v-model="user.password"
                 label="Password"
                 type="password"
+                :error="!!errors.password"
                 required
             ></v-text-field>
             <v-card-actions>
@@ -26,8 +32,10 @@
 
 <script>
 import { mapState } from "vuex";
+import formMixin from "@/mixins/formMixin";
 
 export default {
+    mixins: [formMixin],
     data() {
         return {
             user: {
@@ -42,11 +50,13 @@ export default {
     },
     methods: {
         async registration() {
+            this.resetErrors();
+
             try {
                 await this.$store.dispatch("registration", this.user);
                 this.$emit("close-auth-popup");
             } catch (error) {
-                console.error("Registration error:", error);
+                this.handleApiError(error);
             }
         },
     },
