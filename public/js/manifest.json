@@ -64,13 +64,13 @@
       "app.css"
     ],
     "assets": [
-      "layers.png",
-      "layers-2x.png",
-      "marker-icon.png",
       "materialdesignicons-webfont.eot",
       "materialdesignicons-webfont.woff2",
       "materialdesignicons-webfont.woff",
-      "materialdesignicons-webfont.ttf"
+      "materialdesignicons-webfont.ttf",
+      "layers.png",
+      "layers-2x.png",
+      "marker-icon.png"
     ]
   }
 }

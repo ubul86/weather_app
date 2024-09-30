@@ -1,15 +1,21 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import Activation from '../views/Activation.vue';
+import Vue from "vue";
+import Router from "vue-router";
+import Activation from "../views/Activation.vue";
+import Home from "../views/Home.vue";
 
 Vue.use(Router);
 
 export default new Router({
-    mode: 'history',
+    mode: "history",
     routes: [
         {
-            path: '/activation/:token',
-            name: 'Activation',
+            path: "/",
+            name: "Home",
+            component: Home,
+        },
+        {
+            path: "/activation/:token",
+            name: "Activation",
             component: Activation,
         },
     ],
