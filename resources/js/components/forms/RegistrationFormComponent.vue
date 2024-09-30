@@ -8,12 +8,14 @@
                 v-model="user.name"
                 label="Name"
                 :error="!!errors.name"
+                :error-messages="errors.name || []"
                 required
             ></v-text-field>
             <v-text-field
                 v-model="user.email"
                 label="Email"
                 :error="!!errors.email"
+                :error-messages="errors.email || []"
                 required
             ></v-text-field>
             <v-text-field
@@ -21,6 +23,7 @@
                 label="Password"
                 type="password"
                 :error="!!errors.password"
+                :error-messages="errors.password || []"
                 required
             ></v-text-field>
             <v-card-actions>

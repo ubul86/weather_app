@@ -8,6 +8,7 @@
                 v-model="user.username"
                 label="Username"
                 :error="!!errors.email"
+                :error-messages="errors.email || []"
                 required
             ></v-text-field>
             <v-text-field
@@ -15,6 +16,7 @@
                 label="Password"
                 type="password"
                 :error="!!errors.password"
+                :error-message="errors.password || []"
                 required
             ></v-text-field>
             <v-card-actions>
