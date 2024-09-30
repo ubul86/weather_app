@@ -6,6 +6,7 @@ use App\Http\Requests\ActivationRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Repositories\Interfaces\UserRegistrationInterface;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RegistrationController extends Controller
 {
@@ -31,7 +32,7 @@ class RegistrationController extends Controller
         $message = 'User activated successfully!';
 
         if (!$status) {
-            $message = 'Invalid token';
+            throw new NotFoundHttpException('Invalid token');
         }
 
         return response()->json(['message' => $message]);
